@@ -137,6 +137,9 @@ async def probe_media(path: Path) -> MediaInfo:
         except (ValueError, TypeError):
             nb_frames = 1
 
+    if duration <= 0.0 and nb_frames > 1 and fps > 0:
+        duration = nb_frames / fps
+
     return MediaInfo(
         duration=max(0.0, duration),
         size_bytes=size_bytes,

@@ -1,6 +1,13 @@
+> [!WARNING]
+> # ⚠️ DISCLAIMER: THIS PROJECT IS UNTESTED AND VIBE CODED ⚠️
+> **This entire codebase is UNTESTED and VIBE CODED.**
+> Use at your own risk. Nothing in this repository has been verified in production or tested against live inputs. Expect bugs, edge cases, and potential breaking behavior.
+
+---
+
 # Discord Media Compression Bot
 
-A fast, self-hosted Discord bot for compressing **Videos**, **Images**, and **Animated GIFs** using `discord.py`, `Pillow`, and `FFmpeg` (with automatic **NVIDIA NVENC GPU acceleration** and CPU fallback).
+A self-hosted Discord bot for Linux that compresses **Videos**, **Images**, and **Animated GIFs** using `discord.py`, `Pillow`, and `FFmpeg` (with automatic **NVIDIA NVENC GPU acceleration** and `libx264` CPU fallback).
 
 ## Features
 
@@ -15,11 +22,33 @@ A fast, self-hosted Discord bot for compressing **Videos**, **Images**, and **An
 - **Live Progress Bar**:
   - Parses `ffmpeg -progress` in real time to display a live progress bar while encoding.
 - **Concurrency Queue**:
-  - Protects your PC's GPU/CPU with bounded worker semaphores and notifies waiting users of their queue position.
+  - Protects your host's GPU/CPU with bounded worker semaphores and notifies waiting users of their queue position.
 
 ---
 
-## Setup & Running
+## Linux Prerequisites
+
+Ensure `ffmpeg` (which includes `ffprobe`) and [`uv`](https://docs.astral.sh/uv/) are installed on your Linux system:
+
+```bash
+# Debian / Ubuntu
+sudo apt update && sudo apt install -y ffmpeg
+
+# Fedora / RHEL
+sudo dnf install -y ffmpeg
+
+# Arch Linux
+sudo pacman -S ffmpeg
+
+# Install uv (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+*(Optional)* For hardware-accelerated `h264_nvenc` video encoding on Linux, ensure the proprietary NVIDIA drivers and `nvidia-utils` / CUDA runtime libraries are installed so `ffmpeg -encoders | grep nvenc` is available. Otherwise, the bot automatically falls back to CPU (`libx264`).
+
+---
+
+## Setup & Running (Linux)
 
 ### 1. Create Your Discord Bot Token
 1. Go to the [Discord Developer Portal](https://discord.com/developers/applications) and click **New Application**.
@@ -30,27 +59,28 @@ A fast, self-hosted Discord bot for compressing **Videos**, **Images**, and **An
    - Open the generated URL in your browser to invite the bot to your server.
 
 ### 2. Configure `.env`
-Copy `.env.example` to `.env` and paste your token:
-```powershell
-Copy-Item .env.example .env
+Copy `.env.example` to `.env` and add your token:
+```bash
+cp .env.example .env
+nano .env
 ```
-Edit `.env`:
+Set your `DISCORD_TOKEN`:
 ```env
 DISCORD_TOKEN=your_actual_bot_token_here
-# Optional: Add your server ID for instant slash command updates during testing
+# Optional: Add your server ID for instant slash command updates during development
 DISCORD_GUILD_ID=
 ```
 
 ### 3. Install Dependencies & Run (via `uv`)
-```powershell
-# Install dependencies into .venv
+```bash
+# Create virtual environment and install dependencies into .venv
 uv sync
 
 # Start the bot
 uv run python -m src.bot
 ```
 
-### 4. Run Tests
-```powershell
-uv run pytest
+### 4. Run Tests (Optional)
+```bash
+uv run --extra dev pytest
 ```
