@@ -1,7 +1,7 @@
 > [!WARNING]
 > # ⚠️ DISCLAIMER: THIS PROJECT IS UNTESTED AND VIBE CODED ⚠️
 > **This entire codebase is UNTESTED and VIBE CODED.**
-> Use at your own risk. Nothing in this repository has been verified in production or tested against live inputs. Expect bugs, edge cases, and potential breaking behavior.
+> Use at your own risk. Nothing in this repository and I won't for a while. Expect bugs, edge cases, and really... anythings on the table. Stay safe.
 
 ---
 
